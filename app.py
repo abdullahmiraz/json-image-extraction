@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from PIL import Image
-import pytesseract
+import easyocr
 import base64
 import io
 import json
@@ -31,8 +31,9 @@ def extract_json_from_image():
         image_data = base64.b64decode(base64_string)
         image = Image.open(io.BytesIO(image_data))
 
-        # Extract text using OCR
-        extracted_text = pytesseract.image_to_string(image)
+        # Extract text using EasyOCR
+        reader = easyocr.Reader(["en"])
+        extracted_text = " ".join(reader.readtext(image, detail=0))
 
         # Find JSON in text
         try:
